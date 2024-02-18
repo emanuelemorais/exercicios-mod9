@@ -1,20 +1,20 @@
 package mics
 
 import (
-	"math/rand"
 	"math"
+	"math/rand"
 	"time"
 )
 
-type gasesValues struct {
-	CarbonMonoxide float64 `json:"carbon_monoxide"`
+type GasesValues struct {
+	CarbonMonoxide  float64 `json:"carbon_monoxide"`
 	NitrogenDioxide float64 `json:"nitrogen_dioxide"`
-	Ethanol float64 `json:"ethanol"`
-	Hydrogen float64 `json:"hydrogen"`
-	Ammonia float64 `json:"ammonia"`
-	Methane float64 `json:"methane"`
-	Propane float64 `json:"propane"`
-	IsoButane float64 `json:"iso_butane"`
+	Ethanol         float64 `json:"ethanol"`
+	Hydrogen        float64 `json:"hydrogen"`
+	Ammonia         float64 `json:"ammonia"`
+	Methane         float64 `json:"methane"`
+	Propane         float64 `json:"propane"`
+	IsoButane       float64 `json:"iso_butane"`
 }
 
 type GasValues struct {
@@ -23,7 +23,7 @@ type GasValues struct {
 }
 
 var gasesRange = map[string]GasValues{
-	"carbon_monoxide": {1, 1000},
+	"carbon_monoxide":  {1, 1000},
 	"nitrogen_dioxide": {0.05, 10},
 	"ethanol":          {10, 500},
 	"hydrogen":         {1, 1000},
@@ -33,25 +33,25 @@ var gasesRange = map[string]GasValues{
 	"iso_butane":       {1001, 9999}, // ">1000 ppm"
 }
 
-func RandomValues(gas string) (float64) {
+func RandomValues(gas string) float64 {
 	rand.Seed(time.Now().UnixNano()) // Inicializa a semente do gerador de números aleatórios
 
 	maxValue := gasesRange[gas].MaxValue
 	minValue := gasesRange[gas].MinValue
 	value := rand.Float64()*(maxValue-minValue) + minValue
-	return math.Round(value * 100) / 100
+	return math.Round(value*100) / 100
 }
 
-func CreateGasesValues() (gasesValues) {
-	data := gasesValues{
-		CarbonMonoxide: RandomValues("carbon_monoxide"),
+func CreateGasesValues() GasesValues {
+	data := GasesValues{
+		CarbonMonoxide:  RandomValues("carbon_monoxide"),
 		NitrogenDioxide: RandomValues("nitrogen_dioxide"),
-		Ethanol: RandomValues("ethanol"),
-		Hydrogen: RandomValues("hydrogen"),
-		Ammonia: RandomValues("ammonia"),
-		Methane: RandomValues("methane"),
-		Propane: RandomValues("propane"),
-		IsoButane: RandomValues("iso_butane"),
+		Ethanol:         RandomValues("ethanol"),
+		Hydrogen:        RandomValues("hydrogen"),
+		Ammonia:         RandomValues("ammonia"),
+		Methane:         RandomValues("methane"),
+		Propane:         RandomValues("propane"),
+		IsoButane:       RandomValues("iso_butane"),
 	}
 	return data
 }

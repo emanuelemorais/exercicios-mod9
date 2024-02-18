@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"github.com/emanuelemorais/exercicios-mod9/ponderada-01/internal/mics"
+	
 )
 
 type SensorConfig struct {
@@ -25,7 +27,7 @@ type SendData struct {
 	Unit             string      `json:"unit"`
 	TransmissionRate int         `json:"transmission_rate"`
 	CurrentTime      time.Time   `json:"current_time"`
-	Values           string `json:"values"`
+	Values           mics.GasesValues `json:"values"`
 }
 
 
@@ -68,7 +70,8 @@ func main() {
 	}
 
 	for {
-
+		//fmt.Println("%s", mics.CreateGasesValues())
+		//teste := mics.CreateGasesValues()
 		// Cria a estrutura de dados para enviar ao broker MQTT
 		senddata := SendData{
 			Sensor:           config.Sensor,
@@ -78,6 +81,7 @@ func main() {
 			Unit:             config.Unit,
 			TransmissionRate: config.TransmissionRate,
 			CurrentTime:      time.Now(),
+			Values: 		 mics.CreateGasesValues(),
 		}
 
 		jsonData, err := json.MarshalIndent(senddata, "", "    ")
