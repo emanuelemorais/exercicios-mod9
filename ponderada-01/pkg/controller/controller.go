@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"time"
+	"math/rand"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/emanuelemorais/exercicios-mod9/ponderada-01/internal/mics"
 	
@@ -23,34 +23,10 @@ type SendData struct {
 	Sensor           string      `json:"sensor"`
 	Latitude         float64     `json:"latitude"`
 	Longitude        float64     `json:"longitude"`
-	QoS              byte        `json:"qos"`
 	Unit             string      `json:"unit"`
 	TransmissionRate int         `json:"transmission_rate"`
 	CurrentTime      time.Time   `json:"current_time"`
 	Values           mics.GasesValues `json:"values"`
-}
-
-
-func ReadConfigs() (SensorConfig, error) {
-
-	sensorConfig := "../../config/sensor-config.json"
-
-	configData, err := os.ReadFile(sensorConfig)
-	if err != nil {
-		fmt.Println("Erro ao ler o arquivo de configuração:", err)
-		return SensorConfig{}, err
-	}
-
-	// Decodifica o conteúdo do arquivo JSON de configuração
-	var config SensorConfig
-	err = json.Unmarshal(configData, &config)
-	if err != nil {
-		fmt.Println("Erro ao decodificar o arquivo de configuração:", err)
-		return SensorConfig{}, err
-	}
-
-	return config, nil
-
 }
 
 func ConnectBroker() (MQTT.Client, error) {
@@ -65,6 +41,11 @@ func ConnectBroker() (MQTT.Client, error) {
 	return client, nil
 }
 
+func RandomValues() float64 {
+	rand.Seed(time.Now().UnixNano()) 
+	return rand.Float64() * 100 
+}
+
 func Controller() {
 
 	client, err := ConnectBroker()
@@ -72,21 +53,17 @@ func Controller() {
 		fmt.Println("Erro ao conectar ao broker MQTT:", err)
 	}	
 
-	config, err := ReadConfigs()
-	if err != nil {
-		fmt.Println("Erro ao decodificar o arquivo de configuração:", err)
-	}
+	latitude := RandomValues()
+	longitude := RandomValues()
 
 	for {
 		senddata := SendData{
-			Sensor:           config.Sensor,
-			Latitude:         config.Latitude,
-			Longitude:        config.Longitude,
-			QoS:              config.QoS,
-			Unit:             config.Unit,
-			TransmissionRate: config.TransmissionRate,
+			Sensor:           "MiCS-6814",
+			Latitude:         latitude,
+			Longitude:        longitude,
+			Unit:             "ppm",
 			CurrentTime:      time.Now(),
-			Values: 		 mics.CreateGasesValues(),
+			Values:           mics.CreateGasesValues(),
 		}
 
 		jsonData, err := json.MarshalIndent(senddata, "", "    ")
@@ -95,9 +72,9 @@ func Controller() {
 			return
 		}
 
-		token := client.Publish(config.Sensor, config.QoS, false, string(jsonData))
+		token := client.Publish("mics6814", 1, false, string(jsonData)) 
 		token.Wait()
 		fmt.Println("Publicado:", string(jsonData))
-		time.Sleep(time.Duration(config.TransmissionRate) * time.Second)
+		time.Sleep(1 * time.Second) 
 	}
 }

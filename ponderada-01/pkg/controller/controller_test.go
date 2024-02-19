@@ -16,13 +16,10 @@ func TestConnectBroker(t *testing.T) {
 	}
 }
 
-func TestReadConfigs(t *testing.T) {
-	resultConfig, err := ReadConfigs()
-	if err != nil {
-		t.Fatalf("Erro inesperado ao ler configurações: %v", err)
-	}
-	if reflect.TypeOf(resultConfig) != reflect.TypeOf(SensorConfig{}) {
-		t.Errorf("Tipo de retorno incorreto")
+func TestRandomValues(t *testing.T) {
+	resultConfig := RandomValues()
+	if reflect.TypeOf(resultConfig).Kind() != reflect.Float64 {
+		t.Errorf("Random value is not float64")
 	}
 }
 
@@ -48,9 +45,8 @@ func TestCotroller(t *testing.T) {
 	}()
 
 
-	config, _ := ReadConfigs()
 	go func() {
-		if token := client.Subscribe(config.Sensor, 1, nil); token.Wait() && token.Error() != nil {
+		if token := client.Subscribe("mics6814", 1, nil); token.Wait() && token.Error() != nil {
 			t.Logf("Error subscribing: %s", token.Error())
 			return
 		}
