@@ -1,4 +1,4 @@
-package main
+package controller
 
 import (
 	"encoding/json"
@@ -53,16 +53,24 @@ func ReadConfigs() (SensorConfig, error) {
 
 }
 
-func main() {
-
-	// Conecta ao broker MQTT
+func ConnectBroker() (MQTT.Client, error) {
 	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1891")
 	opts.SetClientID("go_publisher")
 
 	client := MQTT.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
+		return nil, token.Error()
 	}
+
+	return client, nil
+}
+
+func Controller() {
+
+	client, err := ConnectBroker()
+	if err != nil {
+		fmt.Println("Erro ao conectar ao broker MQTT:", err)
+	}	
 
 	config, err := ReadConfigs()
 	if err != nil {
@@ -70,9 +78,6 @@ func main() {
 	}
 
 	for {
-		//fmt.Println("%s", mics.CreateGasesValues())
-		//teste := mics.CreateGasesValues()
-		// Cria a estrutura de dados para enviar ao broker MQTT
 		senddata := SendData{
 			Sensor:           config.Sensor,
 			Latitude:         config.Latitude,
