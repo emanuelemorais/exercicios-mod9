@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
-	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"reflect"
 	"testing"
 	"time"
+
+	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
 var expectedQoS = byte(1)
@@ -17,14 +17,15 @@ func TestRandomValues(t *testing.T) {
 	}
 }
 
-
 func TestReceivingMessage(t *testing.T) {
 
 	var data []string
 	var messagePubHandler MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
-		data = append(data, fmt.Sprintf("Recebido: %s do tópico: %s\n", msg.Payload(), msg.Topic()))
+		msgData := string(msg.Payload())
+		data = append(data, msgData)
 		if msg.Qos() != expectedQoS { //Confere QOS das mensagens recebidas
-			t.Errorf("Expected QoS 1, received %d", msg.Qos())
+			t.Errorf("Expected QoS %d, received %d", expectedQoS, msg.Qos())
+			t.FailNow()
 		}
 	}
 
@@ -67,8 +68,5 @@ func TestReceivingMessage(t *testing.T) {
 	} else {
 		t.Log("Received 5 messages")
 	}
-	
 
 }
-
-
