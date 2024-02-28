@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var expectedQoS = byte(1)
+
 func TestRandomValues(t *testing.T) {
 	resultConfig := RandomValues()
 	if reflect.TypeOf(resultConfig).Kind() != reflect.Float64 {
@@ -21,6 +23,9 @@ func TestReceivingMessage(t *testing.T) {
 	var data []string
 	var messagePubHandler MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 		data = append(data, fmt.Sprintf("Recebido: %s do tópico: %s\n", msg.Payload(), msg.Topic()))
+		if msg.Qos() != expectedQoS { //Confere QOS das mensagens recebidas
+			t.Errorf("Expected QoS 1, received %d", msg.Qos())
+		}
 	}
 
 	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1891")
@@ -37,7 +42,7 @@ func TestReceivingMessage(t *testing.T) {
 	}()
 
 	go func() {
-		if token := client.Subscribe("sensors", 1, nil); token.Wait() && token.Error() != nil {
+		if token := client.Subscribe("sensors", expectedQoS, nil); token.Wait() && token.Error() != nil {
 			t.Logf("Error subscribing: %s", token.Error())
 			return
 		}
@@ -63,5 +68,7 @@ func TestReceivingMessage(t *testing.T) {
 		t.Log("Received 5 messages")
 	}
 	
+
 }
+
 
