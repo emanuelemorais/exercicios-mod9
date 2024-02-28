@@ -40,35 +40,35 @@ Publicado: {
 ### Teste da geraçao de dados - mics6814
 
 1. Entre no seguinte diretório `ponderada-01/internal/mics6814` e rode o comando abaixo:
-'''
+``
 go test -v
-'''
+```
 Esse teste irá verificar se os dados criados estão no range correto sem aterações de valores
 
 
 ### Teste da geraçao de dados - rxwlib900
 
 1. Entre no seguinte diretório `ponderada-01/internal/rxwlib900` e rode o comando abaixo:
-'''
+``
 go test -v
-'''
+```
 Esse teste irá verificar se os dados criados estão no range correto sem aterações de valores
 
 
 ### Teste de conexão com o broker
 
 1. Entre no seguinte diretório `ponderada-01/pkg/common` e rode o comando abaixo:
-'''
+``
 go test -v
-'''
+```
 Esse teste irá verificar se a conexão com o broker é feito corretamente
 
 ### Teste de geração de valores, de QOS, recebimento das mensagens e taxa de transmissão dos dados
 
 1. Entre no seguinte diretório `ponderada-01/pkg/controller` e rode o comando abaixo:
-'''
+```
 go test -v
-'''
+```
 Esse teste passara por duas funções, a TestRandomValues e a TestReceivingMessage. A primeira rirá verificar os tipos de dados gerados para simualar a latitude e logitude enviadas. Já a segunda funciona como um subscriber que analisa o qos das mensagens, recebimento e taxa de recebimento.
 
 ## Video do funcionamento
