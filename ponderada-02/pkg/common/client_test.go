@@ -1,6 +1,8 @@
 package common
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestClient(t *testing.T) {
 	t.Run("Create a Client", func(t *testing.T) {
@@ -11,4 +13,4 @@ func TestClient(t *testing.T) {
 		}
 	})
 
-}
+} 

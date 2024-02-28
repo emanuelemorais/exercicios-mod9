@@ -5,7 +5,7 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
-const Broker = "tcp://localhost:1891" // "broker.hivemq.com:1883"
+const Broker = "tcp://localhost:1891" 
 const IdPublisher = "go-mqtt-publisher"
 const IdSubscriber = "go-mqtt-subscriber"
 
