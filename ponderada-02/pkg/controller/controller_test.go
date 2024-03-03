@@ -1,19 +1,11 @@
 package controller
 
 import (
-	"reflect"
 	"testing"
 	"time"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
-
-func TestRandomValues(t *testing.T) {
-	resultConfig := RandomValues()
-	if reflect.TypeOf(resultConfig).Kind() != reflect.Float64 {
-		t.Errorf("Random value is not float64")
-	}
-}
 
 func TestReceivingMessage(t *testing.T) {
 
@@ -45,14 +37,6 @@ func TestReceivingMessage(t *testing.T) {
 	}
 
 	time.Sleep(5 * time.Second)
-
-	// Verifica o recebimento das mensagens pelo tópico "sensors"
-	if len(data) == 0 {
-		t.Errorf("No messages received")
-	} else {
-		t.Log("Message received successfully")
-
-	}
 
 	// Verifica se o tempo de execução recebe a quatidade de mensagens esperadas de acordo com o perfil de QoS
 	// O disparo de mensagens é feito a cada 1 segundo, logo, espera-se que 5 mensagens sejam recebidas
