@@ -16,24 +16,7 @@ go run simulation.go
 Se tiver dado certo você verá o seguindo tipo de dado sendo publicado:
 
 ```
-Publicado: {
-    "sensor": "MiCS-6814",
-    "latitude": 93.76226478697556,
-    "longitude": 16.492146879375806,
-    "unit": "ppm",
-    "transmission_rate": 0,
-    "current_time": "2024-02-18T23:20:39.542474-03:00",
-    "values": {
-        "carbon_monoxide": 167.4,
-        "nitrogen_dioxide": 9.04,
-        "ethanol": 38.49,
-        "hydrogen": 969.25,
-        "ammonia": 439.16,
-        "methane": 4834.37,
-        "propane": 3767.95,
-        "iso_butane": 5399.89
-    }
-}
+Published message: {"identifier":1,"latitude":85.46761635662278,"longitude":73.82166621077455,"current_time":"2024-03-02T22:38:43.393336-03:00","gases-values":{"sensor":"MiCS-6814","unit":"ppm","gases-values":{"carbon_monoxide":230.44,"nitrogen_dioxide":1.11,"ethanol":100.6,"hydrogen":465.36,"ammonia":152.33,"methane":3173.74,"propane":8349.14,"iso_butane":7476.35}},"radiation-values":{"sensor":"RXWLIB900","unit":"W/m2","radiation-values":{"radiation":712.8}}}
 ```
 
 ## Como rodar os testes
@@ -69,9 +52,9 @@ Esse teste irá verificar se a conexão com o broker é feito corretamente
 ```
 go test -v
 ```
-Esse teste passara por duas funções, a TestRandomValues e a TestReceivingMessage. A primeira rirá verificar os tipos de dados gerados para simualar a latitude e logitude enviadas. Já a segunda funciona como um subscriber que analisa o qos das mensagens, recebimento e taxa de recebimento.
+
+Este teste atua como um subscriber, analisando o QoS das mensagens recebidas, validando os dados conforme o padrão esperado e confirmando o recebimento e a taxa de disparo das mensagens.
 
 ## Video do funcionamento
 
-
-[Clique aqui](https://www.youtube.com/watch?v=FKGViEZvCag)
+https://www.loom.com/share/f57d52daae1d4c8288ba1fe6badf384e
