@@ -3,9 +3,20 @@ package controller
 import (
 	"testing"
 	"time"
+	"regexp"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
+func validateData(data string) bool {
+	regexPattern := `^\{"identifier":\d+,"latitude":\d+(\.\d+)?,"longitude":\d+(\.\d+)?,"current_time":"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}-\d{2}:\d{2}",` +
+		`"gases-values":\{"sensor":"MiCS-6814","unit":"ppm","gases-values":\{"carbon_monoxide":\d+(\.\d+)?,"nitrogen_dioxide":\d+(\.\d+)?,` +
+		`"ethanol":\d+(\.\d+)?,"hydrogen":\d+(\.\d+)?,"ammonia":\d+(\.\d+)?,"methane":\d+(\.\d+)?,"propane":\d+(\.\d+)?,"iso_butane":\d+(\.\d+)?\}\},` +
+		`"radiation-values":\{"sensor":"RXWLIB900","unit":"W/m2","radiation-values":\{"radiation":\d+(\.\d+)?\}\}\}$`
+
+	re := regexp.MustCompile(regexPattern)
+
+	return re.MatchString(data)
+}
 
 func TestReceivingMessage(t *testing.T) {
 
@@ -20,6 +31,10 @@ func TestReceivingMessage(t *testing.T) {
 			t.Errorf("Expected QoS %d, received %d", expectedQoS, msg.Qos())
 			t.FailNow()
 		}
+
+		if !validateData(string(msg.Payload())) { //Confere se a mensagem recebida é válida
+			t.Errorf("Invalid pattern")
+		} 
 	}
 
 	opts := MQTT.NewClientOptions().AddBroker("tcp://localhost:1891")
