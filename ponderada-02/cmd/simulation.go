@@ -10,10 +10,10 @@ func main() {
 	var wg sync.WaitGroup
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
-		go func() {
+		go func(id int) {
 			defer wg.Done()
-			controller.Controller(i + 1)
-		}()
+			controller.Controller(id)
+		}(i + 1)
 	}
 	wg.Wait()
 }

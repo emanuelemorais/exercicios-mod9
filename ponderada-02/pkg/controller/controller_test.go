@@ -4,11 +4,9 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
-var expectedQoS = byte(1)
 
 func TestRandomValues(t *testing.T) {
 	resultConfig := RandomValues()
@@ -20,9 +18,12 @@ func TestRandomValues(t *testing.T) {
 func TestReceivingMessage(t *testing.T) {
 
 	var data []string
+	var expectedQoS = byte(1)
+
 	var messagePubHandler MQTT.MessageHandler = func(client MQTT.Client, msg MQTT.Message) {
 		msgData := string(msg.Payload())
 		data = append(data, msgData)
+		
 		if msg.Qos() != expectedQoS { //Confere QOS das mensagens recebidas
 			t.Errorf("Expected QoS %d, received %d", expectedQoS, msg.Qos())
 			t.FailNow()
@@ -38,16 +39,10 @@ func TestReceivingMessage(t *testing.T) {
 		panic(token.Error())
 	}
 
-	go func() {
-		Controller(1)
-	}()
-
-	go func() {
-		if token := client.Subscribe("sensors", expectedQoS, nil); token.Wait() && token.Error() != nil {
-			t.Logf("Error subscribing: %s", token.Error())
-			return
-		}
-	}()
+	if token := client.Subscribe("sensors", expectedQoS, nil); token.Wait() && token.Error() != nil {
+		t.Logf("Error subscribing: %s", token.Error())
+		return
+	}
 
 	time.Sleep(5 * time.Second)
 
@@ -55,10 +50,8 @@ func TestReceivingMessage(t *testing.T) {
 	if len(data) == 0 {
 		t.Errorf("No messages received")
 	} else {
-		for _, receipt := range data {
-			t.Log(receipt)
-			t.Log("Message received successfully")
-		}
+		t.Log("Message received successfully")
+
 	}
 
 	// Verifica se o tempo de execução recebe a quatidade de mensagens esperadas de acordo com o perfil de QoS
@@ -68,5 +61,7 @@ func TestReceivingMessage(t *testing.T) {
 	} else {
 		t.Log("Received 5 messages")
 	}
+
+
 
 }
