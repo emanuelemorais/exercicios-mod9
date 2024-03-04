@@ -2,53 +2,40 @@ package integration
 
 import (
 	"fmt"
-	"os"
+	//"os"
 	"testing"
 	"time"
-
+	DefaultClient "ponderada-03/pkg/common"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	godotenv "github.com/joho/godotenv"
+	//godotenv "github.com/joho/godotenv"
 )
 
 func TestIntegration(t *testing.T) {
-	var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		fmt.Printf("Recebido: %s do tópico: %s com QoS: %d\n", msg.Payload(), msg.Topic(), msg.Qos())
-	}
 
-	var connectHandler mqtt.OnConnectHandler = func(client mqtt.Client) {
-		fmt.Println("Connected")
-	}
+	client := DefaultClient.CreateClient("client-integration", DefaultClient.Handler)
 
-	var connectLostHandler mqtt.ConnectionLostHandler = func(client mqtt.Client, err error) {
-		fmt.Printf("Connection lost: %v", err)
-	}
-
-	err := godotenv.Load("../.env")
-	if err != nil {
-		fmt.Printf("Error loading .env file: %s", err)
-	}
-
-	var broker = os.Getenv("BROKER_ADDR")
-	var port = 8883
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker(fmt.Sprintf("tls://%s:%d", broker, port))
-	opts.SetClientID("Subscriber")
-	opts.SetUsername(os.Getenv("HIVE_USER"))
-	opts.SetPassword(os.Getenv("HIVE_PSWD"))
-	opts.SetDefaultPublishHandler(messagePubHandler)
-	opts.OnConnect = connectHandler
-	opts.OnConnectionLost = connectLostHandler
-
-	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
+		t.Logf("Error subscribing: %s", token.Error())
 		panic(token.Error())
 	}
 
-	if token := client.Subscribe("sensors", 1, nil); token.Wait() && token.Error() != nil {
-		fmt.Println(token.Error())
+	var data []string
+	var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
+		msgData := string(msg.Payload())
+		data = append(data, msgData)
+
+		fmt.Printf("Recebido: %s do tópico: %s com QoS: %d\n", msg.Payload(), msg.Topic(), msg.Qos())
+	}
+
+	if token := client.Subscribe("sensors", 1, messagePubHandler); token.Wait() && token.Error() != nil {
+		t.Logf("Error subscribing: %s", token.Error())
 		return
 	}
 
 	time.Sleep(5 * time.Second)
 	client.Disconnect(250)
+
+	if len(data) == 0 {
+		t.Errorf("No message was received")
+	}
 }
