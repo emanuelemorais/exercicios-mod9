@@ -2,3 +2,4 @@
 
 - Atividade ponderada 01: https://github.com/emanuelemorais/exercicios-mod9/tree/main/ponderada-01
 - Atividade ponderada 02: https://github.com/emanuelemorais/exercicios-mod9/tree/main/ponderada-02
+- Atividade ponderada 03: https://github.com/emanuelemorais/exercicios-mod9/tree/main/ponderada-03
