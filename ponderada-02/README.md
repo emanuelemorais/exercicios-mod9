@@ -3,12 +3,12 @@
 
 ## Como rodar o código inteiro
 
-1. Inicie o broker local, para isso entre no diretório `ponderada-01/config` e rode o seguinte comando:
+1. Inicie o broker local, para isso entre no diretório `ponderada-02/config` e rode o seguinte comando:
 ```
 mosquitto -c mosquitto.conf
 ```
 
-2. Em seguida, rode o arquivo de simulação de sensores, para isso entre no diretório `ponderada-01/cmd` e execute o comando abaixo:
+2. Em seguida, rode o arquivo de simulação de sensores, para isso entre no diretório `ponderada-02/cmd` e execute o comando abaixo:
 ```
 go run simulation.go
 ```
@@ -22,7 +22,7 @@ Published message: {"identifier":1,"latitude":85.46761635662278,"longitude":73.8
 ## Como rodar os testes
 ### Teste da geraçao de dados - mics6814
 
-1. Entre no seguinte diretório `ponderada-01/internal/mics6814` e rode o comando abaixo:
+1. Entre no seguinte diretório `ponderada-02/internal/mics6814` e rode o comando abaixo:
 ```
 go test -v
 ```
@@ -31,7 +31,7 @@ Esse teste irá verificar se os dados criados estão no range correto sem atera�
 
 ### Teste da geraçao de dados - rxwlib900
 
-1. Entre no seguinte diretório `ponderada-01/internal/rxwlib900` e rode o comando abaixo:
+1. Entre no seguinte diretório `ponderada-02/internal/rxwlib900` e rode o comando abaixo:
 ```
 go test -v
 ```
@@ -40,7 +40,7 @@ Esse teste irá verificar se os dados criados estão no range correto sem atera�
 
 ### Teste de conexão com o broker
 
-1. Entre no seguinte diretório `ponderada-01/pkg/common` e rode o comando abaixo:
+1. Entre no seguinte diretório `ponderada-02/pkg/common` e rode o comando abaixo:
 ```
 go test -v
 ```
@@ -48,7 +48,7 @@ Esse teste irá verificar se a conexão com o broker é feito corretamente
 
 ### Teste de geração de valores, de QOS, recebimento das mensagens e taxa de transmissão dos dados
 
-1. Entre no seguinte diretório `ponderada-01/pkg/controller` e rode o comando abaixo:
+1. Entre no seguinte diretório `ponderada-02/pkg/controller` e rode o comando abaixo:
 ```
 go test -v
 ```
