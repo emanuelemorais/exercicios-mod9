@@ -1,10 +1,13 @@
 package mics6814
 
 import (
-	Common "ponderada-03/internal/common"
+	Common "ponderada-04/internal/sensors/common"
+	"time"
 )
 
 type GasesValues struct {
+	SensorID        string  `json:"sensor_id"`
+	TimeStamp       time.Time  `json:"timestamp"`
 	CarbonMonoxide  float64 `json:"carbon_monoxide"`
 	NitrogenDioxide float64 `json:"nitrogen_dioxide"`
 	Ethanol         float64 `json:"ethanol"`
@@ -13,12 +16,6 @@ type GasesValues struct {
 	Methane         float64 `json:"methane"`
 	Propane         float64 `json:"propane"`
 	IsoButane       float64 `json:"iso_butane"`
-}
-
-type SensorConfig struct {
-	Sensor          string  `json:"sensor"`
-	Unit 		  string  `json:"unit"`
-	GasesValues	 GasesValues `json:"gases-values"`
 }
 
 var gasesRange = map[string]Common.MaxMin{
@@ -32,8 +29,10 @@ var gasesRange = map[string]Common.MaxMin{
 	"iso_butane":       {1001, 9999}, // ">1000 ppm"
 }
 
-func CreateGasesValues() SensorConfig {
+func CreateGasesValues(id string) GasesValues {
 	gasesData := GasesValues{
+		SensorID:        id,
+		TimeStamp:       time.Now(),
 		CarbonMonoxide:  Common.RandomValues(gasesRange, "carbon_monoxide"),
 		NitrogenDioxide: Common.RandomValues(gasesRange, "nitrogen_dioxide"),
 		Ethanol:         Common.RandomValues(gasesRange, "ethanol"),
@@ -43,10 +42,6 @@ func CreateGasesValues() SensorConfig {
 		Propane:         Common.RandomValues(gasesRange, "propane"),
 		IsoButane:       Common.RandomValues(gasesRange, "iso_butane"),
 	}
-	sensorData := SensorConfig{
-		Sensor: "MiCS-6814",
-		Unit: "ppm",
-		GasesValues: gasesData,
-	}	
-	return sensorData
+		
+	return gasesData
 }

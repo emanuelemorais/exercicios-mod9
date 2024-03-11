@@ -1,0 +1,8 @@
+go 1.21.6
+
+use (
+	./ponderada-01
+	./ponderada-02
+	./ponderada-03
+	./ponderada-04
+)

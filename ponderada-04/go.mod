@@ -1,4 +1,4 @@
-module ponderada-03
+module ponderada-04
 
 go 1.21.6
 
