@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	godotenv "github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -21,11 +19,6 @@ type Sensors struct {
 }
 
 func ReturnClient() *mongo.Client {
-
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		fmt.Printf("Error loading .env file: %s", err)
-	}
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGO_DATABASE")))
 	if err != nil {

@@ -44,6 +44,6 @@ func Controller(id string) {
 
 		fmt.Printf("Published message: %s\n", payload)
 
-		time.Sleep(1 * time.Second)
+		time.Sleep(30 * time.Second)
 	}
 }

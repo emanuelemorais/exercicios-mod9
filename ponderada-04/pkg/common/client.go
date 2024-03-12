@@ -4,7 +4,7 @@ import (
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"os"
-	godotenv "github.com/joho/godotenv"
+	//godotenv "github.com/joho/godotenv"
 )
 
 const IdPublisher = "go-mqtt-publisher"
@@ -17,10 +17,10 @@ var Handler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 
 func CreateClient(id string, callback_handler mqtt.MessageHandler) mqtt.Client {
 
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		fmt.Printf("Error loading .env file: %s", err)
-	}
+	// err := godotenv.Load("../../.env")
+	// if err != nil {
+	// 	fmt.Printf("Error loading .env file: %s", err)
+	// }
 
 	var broker = os.Getenv("BROKER_ADDR")
 	var port = 8883

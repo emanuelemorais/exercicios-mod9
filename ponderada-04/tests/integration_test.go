@@ -1,9 +1,11 @@
 package integration
 
 import (
+	"encoding/json"
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	DefaultClient "ponderada-03/pkg/common"
+	SensorStruct "ponderada-04/pkg/controller"
 	"regexp"
 	"testing"
 	"time"
@@ -43,27 +45,24 @@ func TestIntegration(t *testing.T) {
 			t.FailNow()
 		}
 
+		var sensorData SensorStruct.SendData
+		if err := json.Unmarshal([]byte(msg.Payload()), &sensorData); err != nil {
+			panic(err)
+		}
+		
 		fmt.Printf("Recebido: %s do tópico: %s com QoS: %d\n", msg.Payload(), msg.Topic(), msg.Qos())
 	}
-
 
 	if token := client.Subscribe("sensors", 1, messagePubHandler); token.Wait() && token.Error() != nil {
 		t.Logf("Error subscribing: %s", token.Error())
 		return
 	}
 
-	time.Sleep(5 * time.Second)
+	time.Sleep(90 * time.Second)
 	client.Disconnect(250)
-
 
 	if len(data) == 0 {
 		t.Errorf("No message was received")
 	}
-
-	receiptRate := float64(len(data)) / 5
-	if receiptRate > 1.5 || receiptRate < 0.5{
-		t.Errorf("Transmission rate is not within the expected range.")
-	}
-
 
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	ckafka "github.com/confluentinc/confluent-kafka-go/v2/kafka"
-	godotenv "github.com/joho/godotenv"
 	"log"
 	"os"
 	consumerKafka "ponderada-04/internal/kafka"
@@ -12,11 +11,6 @@ import (
 )
 
 func main() {
-
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		fmt.Printf("Error loading .env file: %s", err)
-	}
 
 	msgChan := make(chan *ckafka.Message)
 
