@@ -1,4 +1,4 @@
-# Ponderada 4 - Integração com Metabase e persistencia de dados
+# Atividade ponderada - Integração com Metabase, persistencia de dados e uso do kafka
 ### Essa atividade é uma continuação da ponderada 1, 2 e 3
 
 ## Como rodar o código inteiro
